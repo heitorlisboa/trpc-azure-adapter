@@ -1,10 +1,10 @@
 import type { HttpHandler, HttpRequest } from '@azure/functions';
 import {
-  type AnyRouter,
+  type AnyTRPCRouter,
   type inferRouterContext,
   TRPCError,
+  getErrorShape as getTRPCErrorShape,
 } from '@trpc/server';
-import { getErrorShape } from '@trpc/server/shared';
 import { resolveHTTPResponse } from '@trpc/server/http';
 
 import {
@@ -14,14 +14,14 @@ import {
 } from './utils';
 import type { AzureHandlerOptions } from './types';
 
-export function createAzureApiHandler<TRouter extends AnyRouter>(
+export function createAzureApiHandler<TRouter extends AnyTRPCRouter>(
   opts: AzureHandlerOptions<TRouter, HttpRequest>
 ): HttpHandler {
   return async (request, context) => {
     const path = getTrpcPath(request);
 
     if (path === null) {
-      const error = getErrorShape({
+      const error = getTRPCErrorShape({
         config: opts.router._def._config,
         error: new TRPCError({
           message:
@@ -47,10 +47,32 @@ export function createAzureApiHandler<TRouter extends AnyRouter>(
     }
 
     const req = await azureRequestToTrpcRequest(request, context);
+    if (req === null) {
+      const error = getTRPCErrorShape({
+        config: opts.router._def._config,
+        error: new TRPCError({
+          message:
+            'Invalid body - are you trying to send a body whose format is not JSON or FormData?',
+          code: 'INTERNAL_SERVER_ERROR',
+        }),
+        type: 'unknown',
+        ctx: undefined,
+        path: undefined,
+        input: undefined,
+      });
+
+      return {
+        status: 400,
+        jsonBody: {
+          id: -1,
+          error,
+        },
+      };
+    }
 
     const response = await resolveHTTPResponse({
       router: opts.router,
-      batching: opts.batching,
+      allowBatching: opts.allowBatching,
       responseMeta: opts.responseMeta,
       createContext,
       req,
