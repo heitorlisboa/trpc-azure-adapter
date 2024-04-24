@@ -1,4 +1,15 @@
-# Logs
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+
+# Build Outputs
+.next/
+out/
+build
+dist
+
+# Debug
 logs
 *.log
 npm-debug.log*
@@ -7,15 +18,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# Misc
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+*.pem
