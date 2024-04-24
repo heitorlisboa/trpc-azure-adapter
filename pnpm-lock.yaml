@@ -31,7 +31,7 @@ importers:
         specifier: ^3.5.3
         version: 3.6.0
       concurrently:
-        specifier: ^8.2.1
+        specifier: ^8.2.2
         version: 8.2.2
       typescript:
         specifier: ^4.0.0
