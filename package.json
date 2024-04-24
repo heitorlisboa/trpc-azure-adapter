@@ -1,6 +1,9 @@
 {
   "name": "trpc-azure-adapter",
   "version": "1.0.0",
+  "description": "tRPC adapter for Azure Functions",
+  "author": "Heitor Lisboa",
+  "license": "MIT",
   "scripts": {
     "build:types": "tsc",
     "build:js": "swc ./src -d dist/src",
