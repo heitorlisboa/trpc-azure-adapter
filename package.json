@@ -4,6 +4,9 @@
   "description": "tRPC adapter for Azure Functions",
   "author": "Heitor Lisboa",
   "license": "MIT",
+  "exports": {
+    ".": "./dist/src/index.js"
+  },
   "scripts": {
     "build:types": "tsc",
     "build:js": "swc ./src -d dist/src",
