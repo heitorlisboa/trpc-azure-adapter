@@ -46,13 +46,15 @@ export function createAzureApiHandler<TRouter extends AnyTRPCRouter>(
       return await opts.createContext?.({ request, context });
     }
 
-    const req = await azureRequestToTrpcRequest(request, context);
-    if (req === null) {
+    let trpcRequest;
+    try {
+      trpcRequest = await azureRequestToTrpcRequest(request, context);
+    } catch {
       const error = getTRPCErrorShape({
         config: opts.router._def._config,
         error: new TRPCError({
           message:
-            'Invalid body - are you trying to send a body whose format is not JSON or FormData?',
+            'Error converting Azure request to tRPC request - make sure the request is valid.',
           code: 'INTERNAL_SERVER_ERROR',
         }),
         type: 'unknown',
@@ -62,7 +64,7 @@ export function createAzureApiHandler<TRouter extends AnyTRPCRouter>(
       });
 
       return {
-        status: 400,
+        status: 500,
         jsonBody: {
           id: -1,
           error,
@@ -75,7 +77,7 @@ export function createAzureApiHandler<TRouter extends AnyTRPCRouter>(
       allowBatching: opts.allowBatching,
       responseMeta: opts.responseMeta,
       createContext,
-      req,
+      req: trpcRequest,
       path,
       error: null,
       onError(o) {

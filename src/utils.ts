@@ -19,7 +19,7 @@ const methodsThatDontHaveBody = ['GET', 'HEAD', 'OPTIONS'];
 export async function azureRequestToTrpcRequest(
   request: AzureRequest,
   _context: InvocationContext
-): Promise<TrpcRequest | null> {
+): Promise<TrpcRequest> {
   let body;
   if (!methodsThatDontHaveBody.includes(request.method)) {
     body = await request.arrayBuffer();
