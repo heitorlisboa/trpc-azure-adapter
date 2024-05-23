@@ -14,8 +14,7 @@
   },
   "dependencies": {
     "@azure/functions": "^4.4.0",
-    "@trpc/client": "11.0.0-rc.351",
-    "@trpc/server": "11.0.0-rc.351"
+    "@trpc/server": "11.0.0-rc.374"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.62",

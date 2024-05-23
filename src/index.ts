@@ -5,7 +5,7 @@ import {
   TRPCError,
   getErrorShape as getTRPCErrorShape,
 } from '@trpc/server';
-import { resolveHTTPResponse } from '@trpc/server/http';
+import { resolveResponse } from '@trpc/server/http';
 
 import {
   azureRequestToTrpcRequest,
@@ -70,7 +70,7 @@ export function createAzureApiHandler<TRouter extends AnyTRPCRouter>(
       };
     }
 
-    const response = await resolveHTTPResponse({
+    const response = await resolveResponse({
       router: opts.router,
       allowBatching: opts.allowBatching,
       responseMeta: opts.responseMeta,
@@ -86,6 +86,6 @@ export function createAzureApiHandler<TRouter extends AnyTRPCRouter>(
       },
     });
 
-    return trpcResponseToAzureResponse(response);
+    return await trpcResponseToAzureResponse(response);
   };
 }
